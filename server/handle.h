@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 00:44:54
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 01:55:05
+ * @LastEditTime: 2022-11-16 02:23:29
  * @FilePath: /lab3/server/handle.h
  * @Description: 服务器业务处理
  * 
@@ -25,7 +25,7 @@ typedef struct handle_arg{
 }handle_arg;
 
 //根据客户端传输的文件名获取到server上的对应文件
-void handle_request(void *arg){}
+void handle_request(void *arg);
 
 
 #endif

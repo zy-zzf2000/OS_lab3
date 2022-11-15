@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 02:19:37
+ * @LastEditTime: 2022-11-16 02:26:40
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -64,4 +64,16 @@ int main(int argc, char* argv[]){
         printf("    -h, --help                display this help and exit\n");
         return 0;
     }
+
+    char* dir_root = argv[optind];
+    if(dir_root == NULL){
+        printf("err command!\n");
+        printf("Usage: fserver [OPTION] ... <DIR>\n");
+        return 0;
+    }
+
+    server s;
+    init_server(&s, ip, port, dir_root);
+    do_server(&s);
+    return 0;
 }
