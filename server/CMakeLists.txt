@@ -7,6 +7,8 @@ set(CMAKE_C_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g")
 
 add_executable(fserver
     main.c
+    handle.c
+    server.c
 )
 
 target_include_directories(fserver PUBLIC "${PROJECT_BINARY_DIR}")
