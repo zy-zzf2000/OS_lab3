@@ -20,6 +20,8 @@ void request_show(client *c){
         }
         printf("%s",buf);
     }
+    //关闭套接字
+    shutdown(c->fd,SHUT_RDWR);
 }
 
 //发送get指令，获取服务器上的文件
@@ -59,6 +61,6 @@ void request_get(client *c){
         }else{
             fwrite(buf,1,n,fp);
         }
-        
     }
+    shutdown(c->fd,SHUT_RDWR);
 }

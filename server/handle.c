@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 14:04:45
+ * @LastEditTime: 2022-11-16 18:12:58
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -29,6 +29,7 @@ void handle_show(int client_fd){
         }
     }
     pclose(fp);
+    shutdown(client_fd,SHUT_RDWR);
 }
 
 void handle_get(int client_fd,char* filename){
@@ -74,11 +75,14 @@ void handle_request(void *arg){
         if(n<0){
             perror("recv error");
             return;
+        }else if(n==0){
+            printf("client close\n");
+            return;
         }
-
         //TODO:根据指令处理客户端请求
         if (strncmp(buf, "show", 4) == 0) {
             handle_show(args->client_fd);
+            memset(buf, 0, MAXLINE);
         } else if (strncmp(buf, "get", 3) == 0) {
             //打开客户端请求文件
             char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf+4)));
