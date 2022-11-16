@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 17:06:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:45:23
+ * @LastEditTime: 2022-11-16 23:16:10
  * @FilePath: /lab3/client/main.c
  * @Description: 
  * 
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
                 break;
             default:
                 printf("err command!\n");
-                return 0;
+                return 1;
                 break;
         }
     }

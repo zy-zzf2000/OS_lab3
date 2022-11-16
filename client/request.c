@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 23:11:31
+ * @LastEditTime: 2022-11-16 23:17:59
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -15,7 +15,7 @@ void request_show(client *c){
     //首先向客户端发送show指令
     if(send(c->fd,"show",4,0)<0){
         printf("发送show指令失败");
-        return;
+        exit(1);
     }
     //从服务器接收数据
     while(1){
@@ -23,7 +23,7 @@ void request_show(client *c){
         int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
         if(n<0){
             printf("接收数据失败");
-            return;
+            exit(1);
         }
         if(n==0){
             break;
@@ -41,7 +41,7 @@ void request_get(client *c){
     //首先测试文件是否存在
     if(access(c->save_name,F_OK)==0){
         printf("failed to download %s: %s already exists\n",c->save_name,c->save_name);
-        return;
+        exit(1);
     }
     //首先向客户端发送get指令
     char* cmd = (char*) malloc(sizeof(char) *(strlen(c->request_file)+4));
@@ -49,7 +49,7 @@ void request_get(client *c){
     sprintf(cmd,"get %s",c->request_file);
     if(send(c->fd,cmd,strlen(cmd),0)<0){
         printf("发送get指令失败");
-        return;
+        exit(1);
     }
     //从服务器接收数据
     printf("start downloading %s...\n",c->request_file);
@@ -57,7 +57,7 @@ void request_get(client *c){
 
     if(fp==NULL){
         printf("打开文件%s失败",c->save_name);
-        return;
+        exit(1);
     }
 
     while(1){
@@ -65,7 +65,7 @@ void request_get(client *c){
         int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
         if(n<0){
             printf("接收数据失败");
-            return;
+            exit(1);
         }else if(n==0){
             printf("Ok %s",c->save_name);
             fclose(fp);
