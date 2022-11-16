@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 14:37:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 16:52:10
+ * @LastEditTime: 2022-11-16 17:27:51
  * @FilePath: /lab3/client/client.h
  * @Description: 
  * 
@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef unsigned int uint;
 

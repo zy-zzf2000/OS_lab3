@@ -38,6 +38,7 @@ void request_get(client *c){
         return;
     }
     //从服务器接收数据
+    printf("start downloading %s...",c->request_file);
     fp = fopen(c->save_name,"w");
 
     if(fp==NULL){
