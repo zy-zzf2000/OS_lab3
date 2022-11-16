@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 17:06:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:29:20
+ * @LastEditTime: 2022-11-16 17:45:23
  * @FilePath: /lab3/client/main.c
  * @Description: 
  * 
@@ -15,7 +15,7 @@
 #include "request.h"
 
 char *server_ip = "127.0.0.1";
-uint server_port = 12345;
+ushort server_port = 12345;
 int list_files = 1;
 int show_help = 0;
 char* request_file = NULL;

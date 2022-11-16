@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 14:37:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:27:51
+ * @LastEditTime: 2022-11-16 17:44:57
  * @FilePath: /lab3/client/client.h
  * @Description: 
  * 
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned int uint;
+typedef unsigned short ushort;
 
 typedef struct client {
     char* request_file;
@@ -26,6 +26,6 @@ typedef struct client {
 } client;
 
 //初始化客户端，得到服务器的socket
-void init_client(client* c, char* server_ip, uint server_port, char* request_file,char* save_name);
+void init_client(client* c, char* server_ip, ushort server_port, char* request_file,char* save_name);
 
 #endif

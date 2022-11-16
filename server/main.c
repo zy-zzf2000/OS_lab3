@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 13:57:45
+ * @LastEditTime: 2022-11-16 17:45:29
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -13,7 +13,7 @@
 #include "server.h"
 
 char *ip = "127.0.0.1";
-uint port = 12345;
+ushort port = 12345;
 int show_hide = 0;
 int show_help = 0;
 

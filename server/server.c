@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-15 23:43:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 01:59:06
+ * @LastEditTime: 2022-11-16 17:45:33
  * @FilePath: /lab3/server/server.c
  * @Description: server.h函数实现
  * 
@@ -11,7 +11,7 @@
 #include "server.h"
 
 // 初始化server
-void init_server(server* s, char* ip, uint port, char* dir_root){
+void init_server(server* s, char* ip, ushort port, char* dir_root){
 
     s->ip = ip;
     s->port = port;
@@ -19,7 +19,7 @@ void init_server(server* s, char* ip, uint port, char* dir_root){
 
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htonl(port);
+    addr.sin_port = htons(port);
     addr.sin_addr.s_addr = inet_addr(ip);
 
     s->listen_fd = socket(AF_INET, SOCK_STREAM, 0);
