@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 22:40:14
+ * @LastEditTime: 2022-11-16 23:11:31
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -40,7 +40,7 @@ void request_get(client *c){
     FILE* fp;
     //首先测试文件是否存在
     if(access(c->save_name,F_OK)==0){
-        printf("failed to download %s: %s already exists",c->save_name);
+        printf("failed to download %s: %s already exists\n",c->save_name,c->save_name);
         return;
     }
     //首先向客户端发送get指令
@@ -52,7 +52,7 @@ void request_get(client *c){
         return;
     }
     //从服务器接收数据
-    printf("start downloading %s...",c->request_file);
+    printf("start downloading %s...\n",c->request_file);
     fp = fopen(c->save_name,"w");
 
     if(fp==NULL){

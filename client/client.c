@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:14:17
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:45:59
+ * @LastEditTime: 2022-11-16 23:07:55
  * @FilePath: /lab3/client/client.c
  * @Description: client.h函数实现
  * 
@@ -17,7 +17,7 @@ void init_client(client* c, char* server_ip, ushort server_port, char* request_f
     //创建套接字
     int socket_fd = socket(AF_INET,SOCK_STREAM,0);
     if (socket_fd < 0){
-        perror("socket 创建错误!\n");
+        perror("socket 创建错误\n");
         exit(0);
     }
 
@@ -29,7 +29,7 @@ void init_client(client* c, char* server_ip, ushort server_port, char* request_f
     server_addr.sin_addr.s_addr = inet_addr(server_ip);
 
     if(connect(socket_fd,(struct sockaddr*)&server_addr,sizeof(server_addr)) < 0){
-        perror("connect 错误!\n");
+        perror("connect 错误");
         exit(0);
     }
 

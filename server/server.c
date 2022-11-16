@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-15 23:43:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:45:33
+ * @LastEditTime: 2022-11-16 23:08:09
  * @FilePath: /lab3/server/server.c
  * @Description: server.h函数实现
  * 
@@ -24,12 +24,12 @@ void init_server(server* s, char* ip, ushort port, char* dir_root){
 
     s->listen_fd = socket(AF_INET, SOCK_STREAM, 0);
     if(s->listen_fd < 0){
-        perror("listen socket 创建错误!");
+        perror("listen socket 创建错误");
         exit(0);
     }
 
     if(bind(s->listen_fd,(struct sockaddr*)&addr,sizeof(addr)) < 0){
-        perror("bind 错误！");
+        perror("bind 错误");
         exit(0);
     }
 }
@@ -38,7 +38,7 @@ void init_server(server* s, char* ip, ushort port, char* dir_root){
 void do_server(server* s){
     //监听套接字
     if(listen(s->listen_fd, 10) < 0){
-        perror("listen 错误！");
+        perror("listen 错误");
         exit(0);
     }
 
@@ -48,7 +48,7 @@ void do_server(server* s){
         socklen_t len = sizeof(client_addr);
         int client_fd = accept(s->listen_fd, (struct sockaddr*)&client_addr, &len);
         if(client_fd < 0){
-            perror("accept 错误！");
+            perror("accept 错误");
             exit(0);
         }else{
             //开新线程处理client请求

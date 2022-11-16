@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 22:41:26
+ * @LastEditTime: 2022-11-16 23:07:13
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -16,15 +16,15 @@ void handle_show(int client_fd){
     char buf[MAXBUF];
     FILE *fp;
     if(show_hide == 1){
-        fp = popen("tree -a","r");
+        fp = popen("tree -a -L 1","r");
     }else{
-        fp = popen("tree","r");
+        fp = popen("tree -L 1","r");
     }
     while(!feof(fp)){
         memset(buf,0,MAXBUF);
         int n = fread(buf,1,MAXBUF,fp);
         if(n!=send(client_fd,buf,n,0)){
-            printf("send error!\n");
+            perror("send error");
             return;
         }
     }
