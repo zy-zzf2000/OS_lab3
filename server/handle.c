@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 18:12:58
+ * @LastEditTime: 2022-11-16 22:41:26
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -33,7 +33,6 @@ void handle_show(int client_fd){
 }
 
 void handle_get(int client_fd,char* filename){
-
     FILE *fp = fopen(filename,"r");
     if(fp==NULL){
         printf("文件%s不存在",filename);
