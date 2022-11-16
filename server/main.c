@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 02:26:40
+ * @LastEditTime: 2022-11-16 13:57:45
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -64,6 +64,16 @@ int main(int argc, char* argv[]){
         printf("    -h, --help                display this help and exit\n");
         return 0;
     }
+
+    //测试popen
+    // char buf[MAXLINE];
+    // FILE *fp = popen("tree .","r");
+    // while(!feof(fp)){
+    //     memset(buf,0,MAXLINE);
+    //     fread(buf,1,MAXLINE,fp);
+    //     printf("%s",buf);
+    // }
+    // pclose(fp);
 
     char* dir_root = argv[optind];
     if(dir_root == NULL){

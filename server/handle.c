@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 01:53:15
+ * @LastEditTime: 2022-11-16 14:04:45
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -10,20 +10,29 @@
  */
 #include "handle.h"
 
-//根据客户端传输的文件名获取到server上的对应文件
-void handle_request(void *arg){
-    handle_arg *args = (handle_arg*)arg;
-    //首先需要从client中读取文件名
-    char buf[MAXLINE];
-    int n = recv(args->client_fd,buf,MAXLINE,0);
-    if(n<0){
-        perror("recv error");
-        return;
-    }
+extern int show_hide;
 
-    //打开客户端请求文件
-    char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf)));
-    sprintf(filename,"%s/%s",args->base_dir,buf);
+void handle_show(int client_fd){
+    char buf[MAXBUF];
+    FILE *fp;
+    if(show_hide == 1){
+        fp = popen("tree -a","r");
+    }else{
+        fp = popen("tree","r");
+    }
+    while(!feof(fp)){
+        memset(buf,0,MAXBUF);
+        int n = fread(buf,1,MAXBUF,fp);
+        if(n!=send(client_fd,buf,n,0)){
+            printf("send error!\n");
+            return;
+        }
+    }
+    pclose(fp);
+}
+
+void handle_get(int client_fd,char* filename){
+
     FILE *fp = fopen(filename,"r");
     if(fp==NULL){
         printf("文件%s不存在",filename);
@@ -43,7 +52,7 @@ void handle_request(void *arg){
             return;
         }
         //将file_buf中的内容发送给客户端
-        if(n!=send(args->client_fd,file_buf,n,0)){
+        if(n!=send(client_fd,file_buf,n,0)){
             printf("发送文件%s失败",filename);
             return;
         }
@@ -52,6 +61,35 @@ void handle_request(void *arg){
     //发送完成之后，需要关闭文件
     fclose(fp);
     //关闭连接
-    shutdown(args->client_fd,SHUT_RDWR);
+    shutdown(client_fd,SHUT_RDWR);
+}
+
+//根据客户端传输的文件名获取到server上的对应文件
+void handle_request(void *arg){
+    handle_arg *args = (handle_arg*)arg;
+    //不断从client中读取指令
+    while(1){
+        char buf[MAXLINE];
+        int n = recv(args->client_fd,buf,MAXLINE,0);
+        if(n<0){
+            perror("recv error");
+            return;
+        }
+
+        //TODO:根据指令处理客户端请求
+        if (strncmp(buf, "show", 4) == 0) {
+            handle_show(args->client_fd);
+        } else if (strncmp(buf, "get", 3) == 0) {
+            //打开客户端请求文件
+            char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf+4)));
+            sprintf(filename,"%s/%s",args->base_dir,buf+4);
+            handle_get(args->client_fd, filename);
+            printf("处理完成对于文件：%s的请求", buf + 4);
+            return;
+        } else {
+            printf("unknown command: %s\n", buf);
+            return;
+        }
+    }
 }
 
