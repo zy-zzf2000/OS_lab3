@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 11:40:28
+ * @LastEditTime: 2023-01-11 22:23:30
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -71,6 +71,18 @@ void request_get(client *c){
             fclose(fp);
             break;
         }else{
+            if(strcmp(buf,"unzip")==0){
+                //说明文件已经传输完毕，需要解压
+                fclose(fp);
+                char cmd[50];
+                sprintf(cmd,"mkdir tempdir && tar -xf %s -C ./tempdir --strip-components=1",c->save_name);
+                system(cmd);
+                //删除压缩包
+                remove(c->save_name);
+                //重命名文件夹
+                rename("tempdir",c->save_name);
+                break;
+            }
             fwrite(buf,1,n,fp);
         }
     }

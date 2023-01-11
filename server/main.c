@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 18:40:30
+ * @LastEditTime: 2023-01-11 22:26:50
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -24,13 +24,14 @@ int main(int argc, char* argv[]){
     //处理命令行参数
     int options;
     int long_option_idx;
-    char* optstring = "l:Hp:dh";
+    char* optstring = "l:Hp:dhs";
     static struct option long_options[] = {
         {"listen",  required_argument, 0,  'l' },
         {"port",    required_argument, 0,  'p' },
         {"help",    no_argument,       0,  'h' },
         {"daemon",  no_argument,       0,  'd' },
         {"hidden",  no_argument,       0,  'H' },
+        {"subdir",  no_argument,       0,  's' },
         {0,         0,                 0,   0  },
     };
     
@@ -51,6 +52,9 @@ int main(int argc, char* argv[]){
             case 'd':
                 daemon_mode = 1;
                 break;
+            case 's':
+                show_subdir = 1;
+                break;
             default:
                 printf("err command!\n");
                 return 0;
@@ -66,11 +70,12 @@ int main(int argc, char* argv[]){
         printf("    <DIR> Which directory to serve\n");
         printf("\n");
         printf("options:\n");
-        printf("    -l, --listen=ADDR       specify source address to use [default is localhost]\n");
-        printf("    -H, --hidden             show hidden file\n");
-        printf("    -p, --port=PORT         specify listening port [default port is 12345]\n");
+        printf("    -l, --listen=ADDR         specify source address to use [default is localhost]\n");
+        printf("    -H, --hidden              show hidden file\n");
+        printf("    -p, --port=PORT           specify listening port [default port is 12345]\n");
         printf("    -h, --help                display this help and exit\n");
         printf("    -d, --daemon              run as daemon\n");
+        printf("    -s, --subdir              show subdir\n");
         return 0;
     }
 
@@ -86,7 +91,7 @@ int main(int argc, char* argv[]){
     }
     server s;
     init_server(&s, ip, port, dir_root);
-    show_dir(&s,show_hide,0);
+    show_dir(&s,show_hide,show_subdir);
     do_server(&s);
     return 0;
 }
