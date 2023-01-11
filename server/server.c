@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-15 23:43:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 23:08:09
+ * @LastEditTime: 2023-01-11 11:23:52
  * @FilePath: /lab3/server/server.c
  * @Description: server.h函数实现
  * 
@@ -31,6 +31,24 @@ void init_server(server* s, char* ip, ushort port, char* dir_root){
     if(bind(s->listen_fd,(struct sockaddr*)&addr,sizeof(addr)) < 0){
         perror("bind 错误");
         exit(0);
+    }
+    printf("server listening at %s:%d\n",ip, port);
+}
+
+void show_dir(server* s,int showHidden, int showSubDir){
+    DIR *dir;
+    struct dirent *ent;
+    printf("file list:\n");
+    if((dir = opendir(s->dir_root))!=NULL){
+        while((ent = readdir(dir))!=NULL){
+            if(ent->d_name[0] == '.' && !showHidden){
+                continue;
+            }
+            if(ent->d_type == DT_DIR && !showSubDir){
+                continue;
+            }
+            printf("    %s\n",ent->d_name);
+        }
     }
 }
 

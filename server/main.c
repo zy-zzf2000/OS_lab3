@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 23:05:35
+ * @LastEditTime: 2023-01-11 11:07:37
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -75,19 +75,21 @@ int main(int argc, char* argv[]){
         return 0;
     }
 
-    char buf[MAXLINE];
-    char* cmd = (char*) malloc(sizeof(char) * (strlen(dir_root)+10));
-    sprintf(cmd,"tree -L 1 %s",dir_root);
-    FILE *fp = popen(cmd,"r");
-    while(!feof(fp)){
-        memset(buf,0,MAXLINE);
-        fread(buf,1,MAXLINE,fp);
-        printf("%s",buf);
-    }
-    pclose(fp);
+    //TODO:显示dir_root下的所有文件,后续用show_dir替换
+    // char buf[MAXLINE];
+    // char* cmd = (char*) malloc(sizeof(char) * (strlen(dir_root)+10));
+    // sprintf(cmd,"tree -L 1 %s",dir_root);
+    // FILE *fp = popen(cmd,"r");
+    // while(!feof(fp)){
+    //     memset(buf,0,MAXLINE);
+    //     fread(buf,1,MAXLINE,fp);
+    //     printf("%s",buf);
+    // }
+    // pclose(fp);
 
     server s;
     init_server(&s, ip, port, dir_root);
+    show_dir(&s,show_hide,0);
     do_server(&s);
     return 0;
 }
