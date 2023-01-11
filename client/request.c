@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 22:23:30
+ * @LastEditTime: 2023-01-11 23:51:41
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -75,12 +75,24 @@ void request_get(client *c){
                 //说明文件已经传输完毕，需要解压
                 fclose(fp);
                 char cmd[50];
-                sprintf(cmd,"mkdir tempdir && tar -xf %s -C ./tempdir --strip-components=1",c->save_name);
+                //首先重命名压缩包后缀
+                sprintf(cmd,"mv %s %s.tar",c->save_name,c->save_name);
                 system(cmd);
+                //解压
+                memset(cmd,0,50);
+                sprintf(cmd,"tar -xf %s.tar",c->save_name);
+                system(cmd);
+                //重命名为目标后缀
+                if(strcmp(c->save_name,c->request_file)!=0){
+                    memset(cmd,0,50);
+                    sprintf(cmd,"mv %s %s",c->request_file,c->save_name);
+                    system(cmd);
+                }
                 //删除压缩包
-                remove(c->save_name);
-                //重命名文件夹
-                rename("tempdir",c->save_name);
+                memset(cmd,0,50);
+                sprintf(cmd,"%s.tar",c->save_name);
+                remove(cmd);
+                printf("Ok %s",c->save_name);
                 break;
             }
             fwrite(buf,1,n,fp);
