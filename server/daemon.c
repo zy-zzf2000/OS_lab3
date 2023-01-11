@@ -1,6 +1,6 @@
 #include "daemon.h"
 
-void daemon(char* run_dir){
+void daemonize(char* run_dir){
     pid_t pid;
     pid = fork();
     if(pid<0){
@@ -16,7 +16,7 @@ void daemon(char* run_dir){
     umask(0);
     //删除守护进程的所有文件描述符
     int i = 0;
-    for(i=0;i<gettablesize();i++){
+    for(i=0;i<getdtablesize();i++){
         close(i);
     }
 }

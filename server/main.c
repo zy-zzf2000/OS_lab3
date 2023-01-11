@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 17:50:50
+ * @LastEditTime: 2023-01-11 18:40:30
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
     //处理命令行参数
     int options;
     int long_option_idx;
-    char* optstring = "l:Hp:h";
+    char* optstring = "l:Hp:dh";
     static struct option long_options[] = {
         {"listen",  required_argument, 0,  'l' },
         {"port",    required_argument, 0,  'p' },
@@ -81,12 +81,12 @@ int main(int argc, char* argv[]){
         return 0;
     }
 
+    if(daemon_mode == 1){
+        daemonize(dir_root);
+    }
     server s;
     init_server(&s, ip, port, dir_root);
     show_dir(&s,show_hide,0);
-    if(daemon_mode == 1){
-        daemon(dir_root);
-    }
     do_server(&s);
     return 0;
 }

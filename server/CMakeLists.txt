@@ -9,6 +9,7 @@ add_executable(fserver
     main.c
     handle.c
     server.c
+    daemon.c
 )
 
 target_include_directories(fserver PUBLIC "${PROJECT_BINARY_DIR}")

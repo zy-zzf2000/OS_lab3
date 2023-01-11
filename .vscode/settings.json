@@ -6,6 +6,7 @@
         "client.h": "c",
         "server.h": "c",
         "handle.h": "c",
-        "daemon.h": "c"
+        "daemon.h": "c",
+        "getopt.h": "c"
     }
 }
