@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 17:48:45
+ * @LastEditTime: 2023-01-11 17:50:50
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -11,6 +11,7 @@
 #include <getopt.h>
 
 #include "server.h"
+#include "daemon.h"
 
 char *ip = "127.0.0.1";
 ushort port = 12345;
@@ -83,6 +84,9 @@ int main(int argc, char* argv[]){
     server s;
     init_server(&s, ip, port, dir_root);
     show_dir(&s,show_hide,0);
+    if(daemon_mode == 1){
+        daemon(dir_root);
+    }
     do_server(&s);
     return 0;
 }

@@ -5,6 +5,7 @@
         "stdio.h": "c",
         "client.h": "c",
         "server.h": "c",
-        "handle.h": "c"
+        "handle.h": "c",
+        "daemon.h": "c"
     }
 }

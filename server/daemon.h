@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2023-01-11 17:38:53
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 17:41:20
+ * @LastEditTime: 2023-01-11 17:51:01
  * @FilePath: /lab3/server/daemon.h
  * @Description: 
  * 
@@ -14,6 +14,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-void daemon();
+void daemon(char* run_dir);
 
 #endif
