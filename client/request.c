@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 00:51:55
+ * @LastEditTime: 2023-01-12 01:46:23
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -59,6 +59,12 @@ void request_get(client *c){
         exit(1);
     }
 
+    //TODO:打印进度条
+    int finished = 0;  //finished代表当前已经下载的百分比
+    int recv_bytes = 0;
+    char proc[102];  //用户打印进度条的#
+    bar_print(0,0,proc);
+
     while(1){
         memset(buf,0,MAX_BUFF_SIZE);
         int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
@@ -66,12 +72,14 @@ void request_get(client *c){
             printf("接收数据失败");
             exit(1);
         }else if(n==0){
+            bar_print(finished,100,proc);
             printf("Ok %s",c->save_name);
             fclose(fp);
             break;
         }else{
-            if(strcmp(buf,"unzip")==0){
+            if(strncmp(buf,"unzip",5)==0){
                 //说明文件已经传输完毕，需要解压
+                bar_print(finished,100,proc);
                 fclose(fp);
                 char cmd[50];
                 //首先重命名压缩包后缀
@@ -99,6 +107,10 @@ void request_get(client *c){
                 remove(c->save_name);
                 break;
             }else{
+                recv_bytes += n;
+                int new_finished = (int) (recv_bytes*100.0/c->file_size);
+                bar_print(finished,new_finished,proc);
+                finished = new_finished;
                 fwrite(buf,1,n,fp);
             }
         }
@@ -134,4 +146,14 @@ void request_size(client *c){
     int file_size = atoi(buf);
     c->file_size = file_size;
     printf("%s的大小为:%d\n",c->request_file,file_size);
+}
+
+void bar_print(int finished,int cnt,char* proc){
+    int i;
+    for(i=finished;i<cnt;i++){
+        proc[i] = '#';
+    }
+    printf("\n");
+    printf("[%-100s] [%d%%]\r", proc, cnt);
+    fflush(stdout);
 }
