@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 12:17:16
+ * @LastEditTime: 2023-01-11 17:48:45
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -17,6 +17,7 @@ ushort port = 12345;
 int show_hide = 0;
 int show_help = 0;
 int show_subdir = 0;
+int daemon_mode = 0;
 
 int main(int argc, char* argv[]){
     //处理命令行参数
@@ -27,7 +28,9 @@ int main(int argc, char* argv[]){
         {"listen",  required_argument, 0,  'l' },
         {"port",    required_argument, 0,  'p' },
         {"help",    no_argument,       0,  'h' },
-        {0,         0,                 0,   0  } 
+        {"daemon",  no_argument,       0,  'd' },
+        {"hidden",  no_argument,       0,  'H' },
+        {0,         0,                 0,   0  },
     };
     
     while((options = getopt_long(argc, argv, optstring, long_options, &long_option_idx)) != -1){
@@ -43,6 +46,9 @@ int main(int argc, char* argv[]){
                 break;
             case 'h':
                 show_help = 1;
+                break;
+            case 'd':
+                daemon_mode = 1;
                 break;
             default:
                 printf("err command!\n");
@@ -63,11 +69,9 @@ int main(int argc, char* argv[]){
         printf("    -H, --hidden             show hidden file\n");
         printf("    -p, --port=PORT         specify listening port [default port is 12345]\n");
         printf("    -h, --help                display this help and exit\n");
+        printf("    -d, --daemon              run as daemon\n");
         return 0;
     }
-
-    //测试popen
-
 
     char* dir_root = argv[optind];
     if(dir_root == NULL){
@@ -75,18 +79,6 @@ int main(int argc, char* argv[]){
         printf("Usage: fserver [OPTION] ... <DIR>\n");
         return 0;
     }
-
-    //TODO:显示dir_root下的所有文件,后续用show_dir替换
-    // char buf[MAXLINE];
-    // char* cmd = (char*) malloc(sizeof(char) * (strlen(dir_root)+10));
-    // sprintf(cmd,"tree -L 1 %s",dir_root);
-    // FILE *fp = popen(cmd,"r");
-    // while(!feof(fp)){
-    //     memset(buf,0,MAXLINE);
-    //     fread(buf,1,MAXLINE,fp);
-    //     printf("%s",buf);
-    // }
-    // pclose(fp);
 
     server s;
     init_server(&s, ip, port, dir_root);
