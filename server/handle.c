@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 23:07:13
+ * @LastEditTime: 2023-01-11 14:07:02
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -11,24 +11,34 @@
 #include "handle.h"
 
 extern int show_hide;
+extern int show_subdir;
 
-void handle_show(int client_fd){
+void handle_show(char* base_addr,int client_fd,int show_hide,int show_subdir){
     char buf[MAXBUF];
-    FILE *fp;
-    if(show_hide == 1){
-        fp = popen("tree -a -L 1","r");
-    }else{
-        fp = popen("tree -L 1","r");
-    }
-    while(!feof(fp)){
-        memset(buf,0,MAXBUF);
-        int n = fread(buf,1,MAXBUF,fp);
-        if(n!=send(client_fd,buf,n,0)){
-            perror("send error");
-            return;
+    strcpy(buf,"file lists:\n");
+    send(client_fd,buf,strlen(buf),0);
+    //遍历base_addr目录下的所有文件
+    DIR *dir = opendir(base_addr);
+    struct dirent *ent;
+    while((ent=readdir(dir))!=NULL){
+        //如果是隐藏文件，且不显示隐藏文件，则跳过
+        if(ent->d_name[0]=='.' && !show_hide){
+            continue;
         }
+        //如果是目录，且不显示子目录，则跳过
+        if(ent->d_type==DT_DIR && !show_subdir){
+            continue;
+        }
+        //首先将buf清空
+        memset(buf,0,MAXBUF);
+        //将文件名拼接到buf中
+        memmove(buf + 4 , buf, strlen(buf) + 1);
+        memcpy(buf, "    ", 4);
+        strcat(buf,ent->d_name);
+        strcat(buf,"\n");
+        //将buf中的内容发送给客户端
+        send(client_fd,buf,strlen(buf),0);
     }
-    pclose(fp);
     shutdown(client_fd,SHUT_RDWR);
 }
 
@@ -80,7 +90,7 @@ void handle_request(void *arg){
         }
         //TODO:根据指令处理客户端请求
         if (strncmp(buf, "show", 4) == 0) {
-            handle_show(args->client_fd);
+            handle_show(args->base_dir,args->client_fd,show_hide,show_subdir);
             memset(buf, 0, MAXLINE);
         } else if (strncmp(buf, "get", 3) == 0) {
             //打开客户端请求文件

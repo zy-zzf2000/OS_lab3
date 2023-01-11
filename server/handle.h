@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 00:44:54
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 13:22:48
+ * @LastEditTime: 2023-01-11 12:31:24
  * @FilePath: /lab3/server/handle.h
  * @Description: 服务器业务处理
  * 
@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 typedef struct handle_arg{
     int client_fd;
@@ -25,15 +26,13 @@ typedef struct handle_arg{
 }handle_arg;
 
 //处理show指令
-void handle_show(int client_fd);
+void handle_show(char* base_addr,int client_fd,int show_hide,int show_subdir);
 
 //处理get指令
 void handle_get(int client_fd,char* filename);
 
 //根据客户端传输的文件名获取到server上的对应文件
 void handle_request(void *arg);
-
-
 
 
 #endif

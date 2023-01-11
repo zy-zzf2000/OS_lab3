@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 23:17:59
+ * @LastEditTime: 2023-01-11 11:40:28
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -45,7 +45,7 @@ void request_get(client *c){
     }
     //首先向客户端发送get指令
     char* cmd = (char*) malloc(sizeof(char) *(strlen(c->request_file)+4));
-    //FIXME:这里没有向cmd填充内容
+    //FIXME:这里没有向cmd填充内容(Done)
     sprintf(cmd,"get %s",c->request_file);
     if(send(c->fd,cmd,strlen(cmd),0)<0){
         printf("发送get指令失败");
