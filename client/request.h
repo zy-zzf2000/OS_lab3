@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:10:35
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:28:10
+ * @LastEditTime: 2023-01-12 00:09:20
  * @FilePath: /lab3/client/request.h
  * @Description: 定义客户端可以发送的请求
  * 
@@ -23,5 +23,8 @@ void request_show(client *c);
 
 //发送get指令，获取服务器上的文件
 void request_get(client *c);
+
+//发送size指令，获取服务器上的对应的文件大小
+void request_size(client *c);
 
 #endif

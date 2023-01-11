@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 14:37:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2022-11-16 17:44:57
+ * @LastEditTime: 2023-01-12 00:09:31
  * @FilePath: /lab3/client/client.h
  * @Description: 
  * 
@@ -22,6 +22,7 @@ typedef unsigned short ushort;
 typedef struct client {
     char* request_file;
     char* save_name;
+    int   file_size;
     int fd;
 } client;
 

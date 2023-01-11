@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 22:16:08
+ * @LastEditTime: 2023-01-12 00:37:05
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -73,7 +73,12 @@ void handle_request(void *arg){
             handle_get(args->client_fd, filename);
             printf("处理完成对于文件：%s的请求", buf + 4);
             return;
-        } else {
+        }else if(strncmp(buf, "size", 4) == 0){
+            char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf+4)));
+            sprintf(filename,"%s/%s",args->base_dir,buf+5);
+            handle_size(args->client_fd,filename);
+            //注意handle_size后还需要执行handle_get,所以暂时不用关闭连接
+        }else{
             printf("unknown command: %s\n", buf);
             return;
         }
@@ -85,6 +90,7 @@ void send_file(int client_fd, char* filename){
     FILE *fp = fopen(filename,"r");
     if(fp==NULL){
         printf("文件%s不存在",filename);
+        //FIXME：这里服务器单方面断开连接，导致客户端阻塞，应当发送一个错误信息给客户端
         return;
     }
 
@@ -129,5 +135,32 @@ void send_file(int client_fd, char* filename){
         //发送完成之后，需要关闭文件
         fclose(fp);
     }
+}
 
+void handle_size(int client_fd,char* filename){
+    FILE *fp = fopen(filename,"r");
+    if(fp==NULL){
+        printf("文件%s不存在",filename);
+        return;
+    }
+    //判断文件类型
+    struct stat buf;
+    stat(filename,&buf);
+    if(S_ISDIR(buf.st_mode)){
+        char cmd[100];
+        sprintf(cmd,"tar -cf temp.tar %s/*",filename);
+        system(cmd);
+        //计算文件大小
+        stat("temp.tar",&buf);
+        //将文件大小发送给客户端
+        char size_buf[MAXBUF];
+        sprintf(size_buf,"%ld",buf.st_size);
+        send(client_fd,size_buf,strlen(size_buf),0);
+        system("rm temp.tar");
+    }else{
+        char size_buf[MAXBUF];
+        sprintf(size_buf,"%ld",buf.st_size);
+        send(client_fd,size_buf,strlen(size_buf),0);
+    }
+    fclose(fp);
 }

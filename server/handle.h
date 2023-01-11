@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 00:44:54
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 20:53:37
+ * @LastEditTime: 2023-01-12 00:14:16
  * @FilePath: /lab3/server/handle.h
  * @Description: 服务器业务处理
  * 
@@ -34,6 +34,9 @@ void handle_show(char* base_addr,int client_fd,int show_hide,int show_subdir);
 
 //处理get指令
 void handle_get(int client_fd,char* filename);
+
+//处理size指令
+void handle_size(int client_fd,char* filename);
 
 //根据客户端传输的文件名获取到server上的对应文件
 void handle_request(void *arg);
