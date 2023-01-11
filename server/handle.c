@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 00:37:05
+ * @LastEditTime: 2023-01-12 00:57:56
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -54,9 +54,11 @@ void handle_request(void *arg){
     //不断从client中读取指令
     while(1){
         char buf[MAXLINE];
+        memset(buf,0,MAXLINE);
         int n = recv(args->client_fd,buf,MAXLINE,0);
         if(n<0){
             perror("recv error");
+            send_error(args->client_fd,"recv error");
             return;
         }else if(n==0){
             printf("client close\n");
@@ -80,6 +82,7 @@ void handle_request(void *arg){
             //注意handle_size后还需要执行handle_get,所以暂时不用关闭连接
         }else{
             printf("unknown command: %s\n", buf);
+            send_error(args->client_fd,"unknown command!");
             return;
         }
     }
@@ -91,6 +94,7 @@ void send_file(int client_fd, char* filename){
     if(fp==NULL){
         printf("文件%s不存在",filename);
         //FIXME：这里服务器单方面断开连接，导致客户端阻塞，应当发送一个错误信息给客户端
+        send_error(client_fd,"file does not exist");
         return;
     }
 
@@ -141,6 +145,7 @@ void handle_size(int client_fd,char* filename){
     FILE *fp = fopen(filename,"r");
     if(fp==NULL){
         printf("文件%s不存在",filename);
+        send_error(client_fd,"file does not exist");
         return;
     }
     //判断文件类型
@@ -163,4 +168,10 @@ void handle_size(int client_fd,char* filename){
         send(client_fd,size_buf,strlen(size_buf),0);
     }
     fclose(fp);
+}
+
+void send_error(int client_fd, char* msg){
+    char buf[MAXBUF];
+    sprintf(buf,"error %s",msg);
+    send(client_fd,buf,strlen(buf),0);
 }

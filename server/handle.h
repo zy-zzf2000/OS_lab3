@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 00:44:54
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 00:14:16
+ * @LastEditTime: 2023-01-12 00:43:47
  * @FilePath: /lab3/server/handle.h
  * @Description: 服务器业务处理
  * 
@@ -44,5 +44,6 @@ void handle_request(void *arg);
 //向指定的客户端发送文件(夹)
 void send_file(int client_fd, char* filename);
 
-
+// 告知客户端出错
+void send_error(int client_fd, char* msg);
 #endif

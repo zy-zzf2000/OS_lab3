@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 00:13:44
+ * @LastEditTime: 2023-01-12 00:51:55
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -93,8 +93,14 @@ void request_get(client *c){
                 remove(cmd);
                 printf("Ok %s",c->save_name);
                 break;
+            }else if(strncmp(buf,"error",5)==0){
+                printf("failed to download %s: %s",c->request_file,buf+6);
+                fclose(fp);
+                remove(c->save_name);
+                break;
+            }else{
+                fwrite(buf,1,n,fp);
             }
-            fwrite(buf,1,n,fp);
         }
     }
     shutdown(c->fd,SHUT_RDWR);
@@ -117,6 +123,10 @@ void request_size(client *c){
     }
     //从服务器接收文件大小
     int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
+    if(strncmp(buf,"error",5)==0){
+        printf("failed to download %s: %s\n",c->request_file,buf+6);
+        exit(1);
+    }
     if(n<0){
         printf("接收文件长度失败");
         exit(1);
