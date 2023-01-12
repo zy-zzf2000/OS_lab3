@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 01:46:23
+ * @LastEditTime: 2023-01-12 14:07:01
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -59,28 +59,37 @@ void request_get(client *c){
         exit(1);
     }
 
-    //TODO:打印进度条
+    //TODO:打印进度条(Done)
     int finished = 0;  //finished代表当前已经下载的百分比
     int recv_bytes = 0;
     char proc[102];  //用户打印进度条的#
-    bar_print(0,0,proc);
+    bar_print(0,2,proc);
+
+    int is_close = 0;
 
     while(1){
         memset(buf,0,MAX_BUFF_SIZE);
         int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
+        printf("收到%d个字节\n",n);
         if(n<0){
             printf("接收数据失败");
             exit(1);
         }else if(n==0){
             bar_print(finished,100,proc);
-            printf("Ok %s",c->save_name);
-            fclose(fp);
+            printf("\nOk %s",c->save_name);
+            if(is_close==0){
+                fclose(fp);
+                is_close = 1;
+            }
             break;
         }else{
             if(strncmp(buf,"unzip",5)==0){
                 //说明文件已经传输完毕，需要解压
                 bar_print(finished,100,proc);
-                fclose(fp);
+                if(is_close==0){
+                    fclose(fp);
+                    is_close = 1;
+                }
                 char cmd[50];
                 //首先重命名压缩包后缀
                 sprintf(cmd,"mv %s %s.tar",c->save_name,c->save_name);
@@ -99,19 +108,58 @@ void request_get(client *c){
                 memset(cmd,0,50);
                 sprintf(cmd,"%s.tar",c->save_name);
                 remove(cmd);
-                printf("Ok %s",c->save_name);
+                printf("\nOk %s",c->save_name);
                 break;
             }else if(strncmp(buf,"error",5)==0){
                 printf("failed to download %s: %s",c->request_file,buf+6);
-                fclose(fp);
+                if(is_close==0){
+                    fclose(fp);
+                    is_close = 1;
+                }
                 remove(c->save_name);
                 break;
             }else{
-                recv_bytes += n;
-                int new_finished = (int) (recv_bytes*100.0/c->file_size);
-                bar_print(finished,new_finished,proc);
-                finished = new_finished;
-                fwrite(buf,1,n,fp);
+                //TODO:buf中包含0,因此不能用strstr判断是否有终结符
+                int lastNum = check_spilt(buf,n);
+                if(lastNum!=-1){
+                    recv_bytes += lastNum;
+                    int new_finished = (int) (recv_bytes*100.0/c->file_size);
+                    bar_print(finished,new_finished,proc);
+                    finished = new_finished;
+                    fwrite(buf,1,lastNum,fp);
+                    if(strlen(buf+lastNum+2)!=0){
+                        //说明是文件夹，还需要进行解压缩操作
+                        bar_print(finished,100,proc);
+                        if(is_close==0){
+                            fclose(fp);
+                            is_close = 1;
+                        }
+                        char cmd[50];
+                        //首先重命名压缩包后缀
+                        sprintf(cmd,"mv %s %s.tar",c->save_name,c->save_name);
+                        system(cmd);
+                        //解压
+                        memset(cmd,0,50);
+                        sprintf(cmd,"tar -xf %s.tar",c->save_name);
+                        system(cmd);
+                        //重命名为目标后缀
+                        if(strcmp(c->save_name,c->request_file)!=0){
+                            memset(cmd,0,50);
+                            sprintf(cmd,"mv %s %s",c->request_file,c->save_name);
+                            system(cmd);
+                        }
+                        //删除压缩包
+                        memset(cmd,0,50);
+                        sprintf(cmd,"%s.tar",c->save_name);
+                        remove(cmd);
+                    }
+                }else{
+                    recv_bytes += n;
+                    int new_finished = (int) (recv_bytes*100.0/c->file_size);
+                    bar_print(finished,new_finished,proc);
+                    finished = new_finished;
+                    fwrite(buf,1,n,fp);
+                }
             }
         }
     }
@@ -153,7 +201,20 @@ void bar_print(int finished,int cnt,char* proc){
     for(i=finished;i<cnt;i++){
         proc[i] = '#';
     }
-    printf("\n");
+    // printf("\n");
+    // printf("fflush之前");
     printf("[%-100s] [%d%%]\r", proc, cnt);
     fflush(stdout);
+    usleep(10000);
+    // printf("f");
+}
+
+int check_spilt(char* buf,int len){
+    int i;
+    for(i=0;i<len;i++){
+        if(buf[i]=='$'&&buf[i+1]=='_'){
+            return i;
+        }
+    }
+    return -1;
 }

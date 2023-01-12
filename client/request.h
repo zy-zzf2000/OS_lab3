@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:10:35
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 01:21:35
+ * @LastEditTime: 2023-01-12 13:52:51
  * @FilePath: /lab3/client/request.h
  * @Description: 定义客户端可以发送的请求
  * 
@@ -28,5 +28,8 @@ void request_get(client *c);
 void request_size(client *c);
 
 void bar_print(int finished,int cnt,char* proc);
+
+//检查buf中是否包含分隔符"&_"
+int check_spilt(char* buf,int len);
 
 #endif

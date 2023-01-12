@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 00:57:56
+ * @LastEditTime: 2023-01-12 13:27:23
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -114,17 +114,20 @@ void send_file(int client_fd, char* filename){
         //告知客户端进行解压操作
         char buf[MAXBUF];
         strcpy(buf,"unzip");
-        send(client_fd,buf,strlen(buf),0);
+        int n = send(client_fd,buf,strlen(buf),0);
+        printf("发送%d长度的解压指令给客户端\n",n);
         return;
     }else{
         //读取文件内容到buf中，准备发送给客户端
         //注意文件可能很大，需要循环读取fp stream，直到EOF为止（可用feof判断）
+        //TODO:在发送完数据之后，需要发送一个分隔符，解决TCP粘包的问题（$_）
         char file_buf[MAXBUF];
         while(!feof(fp)){
             //首先将file_buf清空
             memset(file_buf,0,MAXBUF);
             //然后将fp中的内容读取到file_buf中
             int n = fread(file_buf,1,MAXBUF,fp);
+            printf("发送%d的数据给客户端\n",n);
             if(n<0){
                 printf("读取文件%s失败",filename);
                 return;
@@ -135,7 +138,10 @@ void send_file(int client_fd, char* filename){
                 return;
             }
         }
-
+        //发送分隔符
+        memset(file_buf,0,MAXBUF);
+        strcpy(file_buf,"$_");
+        send(client_fd,file_buf,strlen(file_buf),0);
         //发送完成之后，需要关闭文件
         fclose(fp);
     }

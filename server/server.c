@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-15 23:43:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 20:36:52
+ * @LastEditTime: 2023-01-12 12:53:53
  * @FilePath: /lab3/server/server.c
  * @Description: server.h函数实现
  * 
@@ -73,6 +73,9 @@ void do_server(server* s){
             handle_arg* arg = (handle_arg*)malloc(sizeof(handle_arg));
             arg->client_fd = client_fd;
             arg->base_dir = s->dir_root;
+            int enable=1;
+            //禁用negle算法
+            setsockopt(client_fd,IPPROTO_TCP,TCP_NODELAY,(void*)&enable,sizeof(enable));
             pthread_t tid;
             pthread_create(&tid, NULL, (void*)handle_request, (void*)arg);
         }
