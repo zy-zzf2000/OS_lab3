@@ -1,6 +1,7 @@
+
 #include "daemon.h"
 
-void daemonize(char* run_dir){
+void daemonize(){
     pid_t pid;
     pid = fork();
     if(pid<0){
@@ -12,7 +13,7 @@ void daemonize(char* run_dir){
     }
     //脱离原本会话
     setsid();
-    chdir(run_dir);
+    chdir("./");
     umask(0);
     //删除守护进程的所有文件描述符
     int i = 0;

@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 02:09:33
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-11 22:26:50
+ * @LastEditTime: 2023-01-12 23:12:20
  * @FilePath: /lab3/server/main.c
  * @Description: server主函数
  * 
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
     }
 
     if(daemon_mode == 1){
-        daemonize(dir_root);
+        daemonize();
     }
     server s;
     init_server(&s, ip, port, dir_root);
