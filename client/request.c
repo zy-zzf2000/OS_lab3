@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 14:12:21
+ * @LastEditTime: 2023-01-12 23:41:31
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -204,7 +204,7 @@ void bar_print(int finished,int cnt,char* proc){
     // printf("fflush之前");
     printf("[%-100s] [%d%%]\r", proc, cnt);
     fflush(stdout);
-    usleep(10000);
+    // usleep(10000);
     // printf("f");
 }
 
