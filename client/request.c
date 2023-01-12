@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 16:28:01
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 14:07:01
+ * @LastEditTime: 2023-01-12 14:12:21
  * @FilePath: /lab3/client/request.c
  * @Description: 
  * 
@@ -70,7 +70,6 @@ void request_get(client *c){
     while(1){
         memset(buf,0,MAX_BUFF_SIZE);
         int n = recv(c->fd,buf,MAX_BUFF_SIZE,0);
-        printf("收到%d个字节\n",n);
         if(n<0){
             printf("接收数据失败");
             exit(1);

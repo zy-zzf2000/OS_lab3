@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 13:27:23
+ * @LastEditTime: 2023-01-12 14:16:07
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -61,7 +61,7 @@ void handle_request(void *arg){
             send_error(args->client_fd,"recv error");
             return;
         }else if(n==0){
-            printf("client close\n");
+            // printf("client close\n");
             return;
         }
         //TODO:根据指令处理客户端请求
@@ -102,7 +102,6 @@ void send_file(int client_fd, char* filename){
     struct stat buf;
     stat(filename,&buf);
     if(S_ISDIR(buf.st_mode)){
-        printf("文件%s是目录",filename);
         //将该文件夹打包
         char cmd[100];
         sprintf(cmd,"tar -cf temp.tar %s/*",filename);
