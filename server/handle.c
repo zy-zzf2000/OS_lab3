@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 14:19:36
+ * @LastEditTime: 2023-01-12 14:25:00
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -104,7 +104,7 @@ void send_file(int client_fd, char* filename){
     if(S_ISDIR(buf.st_mode)){
         //将该文件夹打包
         char cmd[100];
-        sprintf(cmd,"tar -cf temp.tar %s/*",filename);
+        sprintf(cmd,"tar -cf temp.tar %s",filename);
         system(cmd);
         //将打包后的文件发送给客户端
         send_file(client_fd,"temp.tar");
@@ -158,7 +158,7 @@ void handle_size(int client_fd,char* filename){
     stat(filename,&buf);
     if(S_ISDIR(buf.st_mode)){
         char cmd[100];
-        sprintf(cmd,"tar -cf temp.tar %s/*",filename);
+        sprintf(cmd,"tar -cf temp.tar %s",filename);
         system(cmd);
         //计算文件大小
         stat("temp.tar",&buf);
