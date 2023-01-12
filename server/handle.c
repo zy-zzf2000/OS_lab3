@@ -2,7 +2,7 @@
  * @Author: zy 953725892@qq.com
  * @Date: 2022-11-16 01:52:47
  * @LastEditors: zy 953725892@qq.com
- * @LastEditTime: 2023-01-12 14:16:07
+ * @LastEditTime: 2023-01-12 14:19:36
  * @FilePath: /lab3/server/handle.c
  * @Description: handle.h函数实现
  * 
@@ -73,7 +73,7 @@ void handle_request(void *arg){
             char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf+4)));
             sprintf(filename,"%s/%s",args->base_dir,buf+4);
             handle_get(args->client_fd, filename);
-            printf("处理完成对于文件：%s的请求", buf + 4);
+            printf("处理完成对于文件：%s的请求\n", buf + 4);
             return;
         }else if(strncmp(buf, "size", 4) == 0){
             char* filename = (char*)malloc(sizeof(char)*(strlen(args->base_dir)+strlen(buf+4)));
